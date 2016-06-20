@@ -16,6 +16,11 @@ public class TournamentTypeController extends DBController{
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param _TournamentName
+     * @return
+     */
     public TournamentType getTournamentTypeByName(String _TournamentName)
     {
         TournamentType result = null;

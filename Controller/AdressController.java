@@ -10,6 +10,9 @@ import java.util.List;
  * Created by Lasse on 28.05.2016.
  */
 public class AdressController extends DBController {
+    /**
+     *
+     */
     public AdressController() {
         super();
         try {

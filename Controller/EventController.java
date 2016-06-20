@@ -19,6 +19,11 @@ public class EventController extends DBController{
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param OID
+     * @return
+     */
     public Event getEventByID(int OID)
     {
         Event returningEvent = null;
@@ -44,6 +49,11 @@ public class EventController extends DBController{
         return returningEvent;
     }
 
+    /**
+     * @param _CurrentUser
+     * @param _Event
+     * @return
+     */
     public boolean insertEvent(User _CurrentUser, Event _Event) {
         boolean result = false;
         String sql = "insert into TERMIN " +
@@ -66,6 +76,9 @@ public class EventController extends DBController{
         return result;
     }
 
+    /**
+     * @return
+     */
     public int getNewOID() {
         int newOID = -2147483648;
         String sql = "select max(OID) as MAX_OID from Termine where " +

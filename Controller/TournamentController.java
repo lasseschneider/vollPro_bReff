@@ -54,6 +54,7 @@ public class TournamentController extends DBController{
         }
         }*/
 
+
     /*public List<Tournament> getAllTournaments()
     {
         String sql = "select * from v_turnier";
@@ -98,6 +99,9 @@ public class TournamentController extends DBController{
         return result;
     }
 
+    /**
+     * @return
+     */
     public int getNewOID() {
         int newOID = -2147483648;
         String sql = "select max(OID) as newOID from turnier";

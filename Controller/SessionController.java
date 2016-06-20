@@ -18,6 +18,11 @@ public class SessionController extends DBController{
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param Session_ID
+     * @param _user
+     */
     public void setNewSession(String Session_ID, User _user)
     {
         String sql = "insert into session(SESSION_ID, USER_ID, IS_LOGGED_IN)" +
@@ -34,6 +39,10 @@ public class SessionController extends DBController{
         }
 
     }
+
+    /**
+     * @param Session_ID
+     */
     public void setNewSession(String Session_ID)
     {
         String sql = "insert into session(SESSION_ID, IS_LOGGED_IN)" +
@@ -48,6 +57,11 @@ public class SessionController extends DBController{
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param Session_ID
+     * @return
+     */
     public boolean isLoggedIn(String Session_ID){
         boolean result = false;
         String sql = "select IS_LOGGED_IN from session where SESSION_ID = ?";
@@ -66,6 +80,10 @@ public class SessionController extends DBController{
         return result;
     }
 
+    /**
+     * @param Session_ID
+     * @return
+     */
     public boolean doesSessionExists(String Session_ID)
     {
         boolean result = false;
@@ -85,6 +103,10 @@ public class SessionController extends DBController{
         return result;
     }
 
+    /**
+     * @param Session_ID
+     * @return
+     */
     public Session getSessionBySessionID(String Session_ID) {
         Session resultSession = new Session(Session_ID);
         String sql = "Select IS_LOGGED_IN, USER_ID from session " +
@@ -112,6 +134,9 @@ public class SessionController extends DBController{
         return resultSession;
     }
 
+    /**
+     * @param session
+     */
     public void updateSession(Session session){
         String sql = "update session " +
                 "set IS_LOGGED_IN = ? " +

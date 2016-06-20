@@ -17,6 +17,9 @@ import java.time.*;
  * Created by Lasse on 19.05.2016.
  */
 public class UserController extends DBController {
+    /**
+     *
+     */
     public UserController(){
         super();
         try {
@@ -25,6 +28,12 @@ public class UserController extends DBController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param _OID
+     * @return
+     * @throws SQLException
+     */
     public User getUserByID(int _OID) throws SQLException {
         User resultUser = null;
         try {
@@ -42,6 +51,11 @@ public class UserController extends DBController {
         }
         return resultUser;
     }
+
+    /**
+     * @param _loginemail
+     * @return
+     */
     public User getUserByLoginEmail(String _loginemail){
         try {
             this.connect();
@@ -64,6 +78,11 @@ public class UserController extends DBController {
         }
         return resultUser;
     }
+
+    /**
+     * @param _LoginName
+     * @return
+     */
     public String getPasswordByLoginname(String _LoginName)
     {
         try {
@@ -87,6 +106,11 @@ public class UserController extends DBController {
         }
         return Password;
     }
+
+    /**
+     * @param _LoginName
+     * @return
+     */
     public User getUserByLoginName(String _LoginName){
         try {
             this.connect();
@@ -109,6 +133,11 @@ public class UserController extends DBController {
         }
         return resultUser;
     }
+
+    /**
+     * @param _LoginName
+     * @return
+     */
     public boolean isLoginNameValid(String _LoginName)
     {
         User resultUser = this.getUserByLoginName(_LoginName);
@@ -117,6 +146,11 @@ public class UserController extends DBController {
         else
             return false;
     }
+
+    /**
+     * @param _LoginEmail
+     * @return
+     */
     public boolean isLoginEmailValid(String _LoginEmail)
     {
         User resultUser = this.getUserByLoginEmail(_LoginEmail);
@@ -125,6 +159,12 @@ public class UserController extends DBController {
         else
             return false;
     }
+
+    /**
+     * @param _LoginName
+     * @param _Password
+     * @return
+     */
     public User isUserValidByLoginName(String _LoginName, String _Password)
     {
         User resultUser = this.getUserByLoginName(_LoginName);
@@ -135,6 +175,12 @@ public class UserController extends DBController {
         }
         return resultUser;
     }
+
+    /**
+     * @param _LoginEmail
+     * @param _Password
+     * @return
+     */
     public User isUserValidByLoginEmail(String _LoginEmail, String _Password)
     {
         User resultUser = this.getUserByLoginEmail(_LoginEmail);
@@ -152,6 +198,12 @@ public class UserController extends DBController {
         }
         }
     }
+
+    /**
+     * @param _LoginNameOrLoginEmail
+     * @param _Password
+     * @return
+     */
     public User doesUserExists(String _LoginNameOrLoginEmail, String _Password){
         User resultUser = isUserValidByLoginEmail(_LoginNameOrLoginEmail, _Password);
         if(resultUser != null)
@@ -162,6 +214,12 @@ public class UserController extends DBController {
             return  resultUser;
         }
     }
+
+    /**
+     * @param _unHashedPW
+     * @param _HashedPW
+     * @return
+     */
     public boolean isPasswordRight(String _unHashedPW, String _HashedPW)
     {
         MD5 md5 = new MD5();
@@ -171,6 +229,10 @@ public class UserController extends DBController {
         else
             return false;
     }
+
+    /**
+     * @return
+     */
     public List<User> getAllUser()
     {
         List<User> resultList = new ArrayList<User>();
@@ -190,6 +252,10 @@ public class UserController extends DBController {
         }
         return resultList;
     }
+
+    /**
+     * @return
+     */
     public int getNumberOfUser()
     {
         int result = 0;
@@ -205,6 +271,11 @@ public class UserController extends DBController {
         }
         return result;
     }
+
+    /**
+     * @param _username
+     * @return
+     */
     public int getNumberOfUser(String _username)
     {
         int result = 0;
@@ -221,6 +292,14 @@ public class UserController extends DBController {
         }
         return result;
     }
+
+    /**
+     * @param _LoginName
+     * @param _LoginEmail
+     * @param _Password
+     * @param currentUser
+     * @return
+     */
     //isn't done
     //does not work in index.jsp. always returs false. will only be good when I can find out how to handel Date format in Java
     public boolean insertNewUser(String _LoginName, String _LoginEmail, String _Password, User currentUser)
