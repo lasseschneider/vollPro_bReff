@@ -62,8 +62,8 @@ public class EventController extends DBController{
         try{
             this.preparedStatement = this.connection.prepareCall(sql);
             this.preparedStatement.setInt(1, _Event.getOID());
-            this.preparedStatement.setDate(2, _Event.getEvent_from());
-            this.preparedStatement.setDate(3, _Event.getEvent_to());
+            this.preparedStatement.setTimestamp(2, _Event.getEvent_from());
+            this.preparedStatement.setTimestamp(3, _Event.getEvent_to());
             this.preparedStatement.setString(4, _Event.getDescription());
             this.preparedStatement.setString(5, _Event.getSummury());
             this.preparedStatement.setInt(6, _CurrentUser.getOid());

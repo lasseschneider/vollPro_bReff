@@ -4,6 +4,8 @@ import Model.Session;
 import Model.User;
 
 import java.sql.SQLException;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Lasse on 17.06.2016.
@@ -64,10 +66,13 @@ public class SessionController extends DBController{
      */
     public boolean isLoggedIn(String Session_ID){
         boolean result = false;
-        String sql = "select IS_LOGGED_IN from session where SESSION_ID = ?";
+        Timestamp now = new Timestamp( System.currentTimeMillis() );
+        String sql = "select IS_LOGGED_IN from session where SESSION_ID = ? " +
+                "and ? BETWEEN LOGGED_IN_FROM and LOGGED_IN_TO";
         try{
             this.preparedStatement = this.connection.prepareCall(sql);
             this.preparedStatement.setString(1,Session_ID);
+            this.preparedStatement.setTimestamp(2, now);
             this.preparedStatement.execute();
             this.result = this.preparedStatement.getResultSet();
             this.result.next();
@@ -87,10 +92,33 @@ public class SessionController extends DBController{
     public boolean doesSessionExists(String Session_ID)
     {
         boolean result = false;
-        String sql = "select count(*) as anzahl from session where SESSION_ID = ?";
+        String sql = "select count(*) as anzahl from session where SESSION_ID = ? ";
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         try{
             this.preparedStatement = this.connection.prepareCall(sql);
             this.preparedStatement.setString(1,Session_ID);
+            //this.preparedStatement.setTimestamp(2,now);
+            this.preparedStatement.execute();
+            this.result = this.preparedStatement.getResultSet();
+            this.result.next();
+            if(this.result.getInt(1) == 1)
+                result = true;
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public boolean isSessionValid(String Session_ID)
+    {
+        boolean result = false;
+        String sql = "select count(*) as anzahl from session where SESSION_ID = ? " +
+                "and LOGGED_IN_TO >= ?";
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.setString(1,Session_ID);
+            this.preparedStatement.setTimestamp(2,now);
             this.preparedStatement.execute();
             this.result = this.preparedStatement.getResultSet();
             this.result.next();
@@ -109,7 +137,7 @@ public class SessionController extends DBController{
      */
     public Session getSessionBySessionID(String Session_ID) {
         Session resultSession = new Session(Session_ID);
-        String sql = "Select IS_LOGGED_IN, USER_ID from session " +
+        String sql = "Select IS_LOGGED_IN, USER_ID, LOGGED_IN_FROM, LOGGED_IN_TO from session " +
                 "where SESSION_ID = ?";
         try{
             this.preparedStatement = this.connection.prepareCall(sql);
@@ -118,6 +146,8 @@ public class SessionController extends DBController{
             this.result = this.preparedStatement.getResultSet();
             this.result.next();
             resultSession.setLoggedIn(this.result.getBoolean(1));
+            resultSession.setLoggedInFrom(this.result.getTimestamp(3));
+            resultSession.setLoggedInUntil(this.result.getTimestamp(4));
             User sessionUser;
             UserController uc = new UserController();
             try{
@@ -141,16 +171,54 @@ public class SessionController extends DBController{
         String sql = "update session " +
                 "set IS_LOGGED_IN = ? " +
                 ", USER_ID = ? " +
-                "where SESSION_ID = ?";
+                ", LOGGED_IN_FROM = ? " +
+                ", LOGGED_IN_TO = ? " +
+                "WHERE " +
+                "SESSION_ID = ?";
         try{
             this.preparedStatement = this.connection.prepareCall(sql);
             this.preparedStatement.setBoolean(1,session.isLoggedIn());
-            this.preparedStatement.setString(3,session.getSession_ID());
             this.preparedStatement.setInt(2,session.getUser().getOid());
+            this.preparedStatement.setTimestamp(3, session.getLoggedInFrom());
+            this.preparedStatement.setTimestamp(4, session.getLoggedInUntil());
+            this.preparedStatement.setString(5,session.getSession_ID());
             this.preparedStatement.execute();
         }catch(SQLException e)
         {
             e.printStackTrace();
         }
+    }
+
+
+    public void testUtil(String sessionID, java.util.Date date) {
+        String sql = "UPDATE session " +
+                "SET LOGGED_IN_TO = ? " +
+                "WHERE SESSION_ID = ?";
+        try {
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public boolean logoutFromSession(String sessionID) {
+        boolean res = false;
+        String sql = "update session " +
+                "set logged_in_to = ? " +
+                ", IS_LOGGED_IN = ?" +
+                "where SESSION_ID = ?";
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.setTimestamp(1,now);
+            this.preparedStatement.setBoolean(2,false);
+            this.preparedStatement.setString(3,sessionID);
+            this.preparedStatement.execute();
+            res = true;
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return res;
     }
 }

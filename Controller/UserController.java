@@ -13,6 +13,9 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.time.*;
+
+import static java.sql.Types.NULL;
+
 /**
  * Created by Lasse on 19.05.2016.
  */
@@ -351,6 +354,56 @@ public class UserController extends DBController {
         catch (SQLException e) {
         e.printStackTrace();
     }
+        return result;
+    }
+    public boolean insertNewUser(String _LoginName, String _LoginEmail, String _Password)
+    {
+        boolean result = false;
+        String MD5Password;
+        double newOid;
+        MD5 md5Class = new MD5();
+        MD5Password = md5Class.getMD5(_Password);
+        int numberOfUser = this.getNumberOfUser();
+        if(numberOfUser == 0) {
+            newOid = -2147483648;
+        }
+        else{
+            if(this.isLoginEmailValid(_LoginEmail) || this.isLoginNameValid(_LoginName))
+            {
+                return false;
+            }
+            else {
+                newOid = -2147483648 + numberOfUser;
+            }
+        }
+        Date curdate  = null;
+        try {
+            //ToDo: Insert right date from today behind parse
+            curdate = new Date(new SimpleDateFormat("yyyy-mm-dd").parse("2016-06-10").getTime());
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+        String sql = "insert into user (OID, ERSTELLT_VON_ID, LOGIN_NAME, LOGIN_EMAIL, PASSWORT, GUELTIG_VON, ERSTELLT_AM) " +
+                "values(?,? ,?,?,?,?,?)" +
+                "ON DUPLICATE KEY UPDATE LOGIN_NAME = ?";
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.setInt(1,(int)newOid);
+            this.preparedStatement.setInt(2,NULL);
+            this.preparedStatement.setString(3,_LoginName);
+            this.preparedStatement.setString(4,_LoginEmail);
+            this.preparedStatement.setString(5,MD5Password);
+            this.preparedStatement.setDate(6,curdate);
+            this.preparedStatement.setDate(7,curdate);
+            this.preparedStatement.setString(8,_LoginName);
+            this.preparedStatement.execute();
+            result = true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 }
