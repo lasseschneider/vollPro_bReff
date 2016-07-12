@@ -32,6 +32,7 @@ public class UserRes {
             }catch(SQLException e)
             {
                 e.printStackTrace();
+
             }
             return us;
         }
