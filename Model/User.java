@@ -26,6 +26,14 @@ public class User {
         this.login_email    = null;
         this.passwort       = null;
     }
+
+    public User() {
+        this.oid = 0;
+        this.login_name     = null;
+        this.login_email    = null;
+        this.passwort       = null;
+    }
+
     public static boolean isUserNameValid(String _Username)
     {
         UserController uc = new UserController();

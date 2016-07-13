@@ -60,11 +60,6 @@ public class UserController extends DBController {
      * @return
      */
     public User getUserByLoginEmail(String _loginemail){
-        try {
-            this.connect();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         User resultUser = null;
         try {
             PreparedStatement ps;
@@ -115,11 +110,6 @@ public class UserController extends DBController {
      * @return
      */
     public User getUserByLoginName(String _LoginName){
-        try {
-            this.connect();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         User resultUser = null;
         try {
             PreparedStatement ps;
@@ -171,9 +161,12 @@ public class UserController extends DBController {
     public User isUserValidByLoginName(String _LoginName, String _Password)
     {
         User resultUser = this.getUserByLoginName(_LoginName);
+        String md5Password = MD5.getMD5(_Password);
+
         if(resultUser != null)
         {
-            if (resultUser.getPasswort().equals(_Password))
+            boolean passwordEquals = resultUser.getPasswort().equals(md5Password);
+            if (!passwordEquals)
                 resultUser = null;
         }
         return resultUser;
