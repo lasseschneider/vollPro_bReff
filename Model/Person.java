@@ -15,6 +15,14 @@ public class Person {
         this.refereeGroup = refereeGroup;
     }
 
+    public Person(String name, String lastName, Date birthday, int OID) {
+        this.name = name;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.OID = OID;
+        this.refereeGroup = null;
+    }
+
     private String name;
     private String lastName;
     private Date birthday;

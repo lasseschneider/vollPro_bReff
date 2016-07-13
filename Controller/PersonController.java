@@ -1,9 +1,12 @@
 package Controller;
 
+import Model.Person;
 import Model.User;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Lasse on 05.07.2016.
@@ -83,6 +86,40 @@ public class PersonController extends DBController{
             res=true;
         }catch(SQLException e){
             e.printStackTrace();
+        }
+        return res;
+    }
+
+    public ArrayList<Person> getPersonList(){
+        ArrayList<Person> resultList = new ArrayList<Person>();
+        String sql = "Select oid, Name, vorname, geburtsdatum " +
+                "from person";
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.execute();
+            this.result = this.preparedStatement.getResultSet();
+            while(this.result.next()){
+                resultList.add(new Person(this.result.getString(3),this.result.getString(2),this.result.getDate(4),this.result.getInt(1)));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return resultList;
+    }
+
+    public boolean deletePerson(int _OID){
+        boolean res;
+        String sql = "delete from person " +
+                "where OID = ?";
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.setInt(1,_OID);
+            this.preparedStatement.execute();
+            res = true;
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+            res = false;
         }
         return res;
     }

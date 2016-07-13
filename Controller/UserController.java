@@ -385,17 +385,12 @@ public class UserController extends DBController {
         return result;
     }
 
-    public boolean insertNewUser(String _LoginName, String _Password)
+    /*public boolean insertNewUser(String _LoginName, String _Password)
     {
         boolean result = false;
         String MD5Password;
         int newOid = this.getMaxOID() + 1;
         MD5Password = MD5.getMD5(_Password);
-
-            if(this.isLoginNameValid(_LoginName))
-            {
-                return false;
-            }
 
         String sql = "insert into user (OID, LOGIN_NAME, PASSWORT, GUELTIG_VON, ERSTELLT_AM) " +
                 "values(?,?,?,curdate(),curdate())";
@@ -406,6 +401,29 @@ public class UserController extends DBController {
             this.preparedStatement.setString(3,MD5Password);
             this.preparedStatement.execute();
             result = true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }*/
+
+    public User insertNewUser(String _LoginName, String _Password)
+    {
+        User result = null;
+        String MD5Password;
+        int newOid = this.getMaxOID() + 1;
+        MD5Password = MD5.getMD5(_Password);
+
+        String sql = "insert into user (OID, LOGIN_NAME, PASSWORT, GUELTIG_VON, ERSTELLT_AM) " +
+                "values(?,?,?,curdate(),curdate())";
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.setInt(1,newOid);
+            this.preparedStatement.setString(2,_LoginName);
+            this.preparedStatement.setString(3,MD5Password);
+            this.preparedStatement.execute();
+            result = this.getUserByID(newOid);
         }
         catch (SQLException e) {
             e.printStackTrace();
