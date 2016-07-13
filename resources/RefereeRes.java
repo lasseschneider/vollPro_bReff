@@ -27,7 +27,6 @@ public class RefereeRes{
     }
 
 
-
     @GET
     @Path("/allRefs")
     @Produces(value = MediaType.APPLICATION_JSON)
