@@ -22,7 +22,6 @@ import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 @Path("/userres")
 public class UserRes {
 
-
         @GET
         @Produces(value = MediaType.APPLICATION_JSON)
         public User getUserAsJSON() {
