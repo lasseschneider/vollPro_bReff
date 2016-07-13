@@ -296,8 +296,7 @@ public class UserController extends DBController {
      * @param currentUser
      * @return
      */
-    //isn't done
-    //does not work in index.jsp. always returs false. will only be good when I can find out how to handel Date format in Java
+
     public boolean insertNewUser(String _LoginName, String _LoginEmail, String _Password, User currentUser)
     {
         boolean result = false;
@@ -319,14 +318,7 @@ public class UserController extends DBController {
                 newOid = -2147483648 + numberOfUser;
             }
         }
-        Date curdate  = null;
-        try {
-            //ToDo: Insert right date from today behind parse
-            curdate = new Date(new SimpleDateFormat("yyyy-mm-dd").parse("2016-06-10").getTime());
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+        Date curdate  = new Date( System.currentTimeMillis() );
 
         String sql = "insert into user (OID, ERSTELLT_VON_ID, LOGIN_NAME, LOGIN_EMAIL, PASSWORT, GUELTIG_VON, ERSTELLT_AM) " +
                 "values(?,?,?,?,?,?,?)" +
@@ -369,14 +361,7 @@ public class UserController extends DBController {
                 newOid = -2147483648 + numberOfUser;
             }
         }
-        Date curdate  = null;
-        try {
-            //ToDo: Insert right date from today behind parse
-            curdate = new Date(new SimpleDateFormat("yyyy-mm-dd").parse("2016-06-10").getTime());
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+        Date curdate  = new Date( System.currentTimeMillis() );
 
         String sql = "insert into user (OID, ERSTELLT_VON_ID, LOGIN_NAME, LOGIN_EMAIL, PASSWORT, GUELTIG_VON, ERSTELLT_AM) " +
                 "values(?,? ,?,?,?,?,?)" +
@@ -398,5 +383,49 @@ public class UserController extends DBController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public boolean insertNewUser(String _LoginName, String _Password)
+    {
+        boolean result = false;
+        String MD5Password;
+        int newOid = this.getMaxOID() + 1;
+        MD5Password = MD5.getMD5(_Password);
+
+            if(this.isLoginNameValid(_LoginName))
+            {
+                return false;
+            }
+
+        String sql = "insert into user (OID, LOGIN_NAME, PASSWORT, GUELTIG_VON, ERSTELLT_AM) " +
+                "values(?,?,?,curdate(),curdate())";
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.setInt(1,newOid);
+            this.preparedStatement.setString(2,_LoginName);
+            this.preparedStatement.setString(3,MD5Password);
+            this.preparedStatement.execute();
+            result = true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int getMaxOID() {
+        int maxOID = -2147483648;
+        String sql = "select max(OID) as anzahl from user";
+        try{
+            this.preparedStatement = this.connection.prepareCall(sql);
+            this.preparedStatement.execute();
+            this.result = this.preparedStatement.getResultSet();
+            this.result.next();
+            maxOID = this.result.getInt(1);
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return maxOID;
     }
 }
