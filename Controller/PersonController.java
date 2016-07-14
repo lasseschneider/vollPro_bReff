@@ -34,16 +34,16 @@ public class PersonController extends DBController{
         }
         return res;
     }
-    private int getNewOID() {
+    public int getNewOID() {
         int res;
-        String sql = "select max(OID) + 1 as newOid " +
+        String sql = "select max(OID) " +
                 "from person";
         try{
             this.preparedStatement = this.connection.prepareCall(sql);
             this.preparedStatement.execute();
             this.result = this.preparedStatement.getResultSet();
-            this.result.next();
-            res = this.result.getInt(1);
+            this.result.absolute(1);
+            res = this.result.getInt(1) + 1;
         }catch(SQLException e){
             e.printStackTrace();
             res = -2147483648;
@@ -120,6 +120,30 @@ public class PersonController extends DBController{
         {
             e.printStackTrace();
             res = false;
+        }
+        return res;
+    }
+    public boolean insertPersons(ArrayList<Person> PersonList){
+        boolean res=true;
+        int newOID = this.getNewOID();
+        String sql = "INSERT INTO PERSON(OID, NAME, VORNAME, GEBURTSDATUM, ERSTELLT_AM, GUELTIG_VON) " +
+                "VALUES(?,?,?,?,curdate(),curdate())";
+        for (int i = 0; i < PersonList.size(); ++i){
+            try{
+                this.preparedStatement = this.connection.prepareCall(sql);
+                this.preparedStatement.setInt(1,newOID);
+                this.preparedStatement.setString(2,PersonList.get(i).getLastName());
+                this.preparedStatement.setString(3,PersonList.get(i).getName());
+                this.preparedStatement.setDate(4,PersonList.get(i).getBirthday());
+                this.preparedStatement.execute();
+                newOID++;
+                res=true;
+
+            }catch(SQLException e)
+            {
+                e.printStackTrace();
+                res=false;
+            }
         }
         return res;
     }

@@ -1,5 +1,8 @@
 package resources;
+import Controller.PersonController;
+import Controller.RefereeController;
 import Controller.UserController;
+import Model.Person;
 import Model.Referee;
 import Model.User;
 
@@ -10,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
@@ -30,10 +34,9 @@ public class RefereeRes{
     @GET
     @Path("/allRefs")
     @Produces(value = MediaType.APPLICATION_JSON)
-    public List<Referee> getAllReferees(){
-    List<Referee> result = null;
-        //ToDo: RefereeController implementieren.
-        //RefereeController rc = new RefereeController();
+    public ArrayList<Referee> getAllReferees(){
+        RefereeController rc = new RefereeController();
+    ArrayList<Referee> result = rc.getAllReferees();
     return result;
     }
 

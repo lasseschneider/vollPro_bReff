@@ -30,4 +30,52 @@ public class Referee {
     private Date licenseValidFrom;
     private Date licenseValidTo;
     private LicenseType licenseType;
+
+    public int getOID() {
+        return OID;
+    }
+
+    public void setOID(int OID) {
+        this.OID = OID;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public Date getLicenseValidFrom() {
+        return licenseValidFrom;
+    }
+
+    public void setLicenseValidFrom(Date licenseValidFrom) {
+        this.licenseValidFrom = licenseValidFrom;
+    }
+
+    public Date getLicenseValidTo() {
+        return licenseValidTo;
+    }
+
+    public void setLicenseValidTo(Date licenseValidTo) {
+        this.licenseValidTo = licenseValidTo;
+    }
+
+    public LicenseType getLicenseType() {
+        return licenseType;
+    }
+
+    public void setLicenseType(LicenseType licenseType) {
+        this.licenseType = licenseType;
+    }
 }

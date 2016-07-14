@@ -29,6 +29,14 @@ public class Person {
     private int OID;
     private RefereeGroup refereeGroup;
 
+    public Person() {
+        this.name = null;
+        this.lastName = null;
+        this.birthday = null;
+        this.OID = 0;
+        this.refereeGroup = null;
+    }
+
     public RefereeGroup getRefereeGroup() {
         return refereeGroup;
     }
