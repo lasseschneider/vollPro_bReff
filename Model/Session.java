@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  * Created by Lasse on 17.06.2016.
  */
 
+    //ToDo:Implementieren vom Ausloggen
 public class Session {
     private String Session_ID;
     private User user;
